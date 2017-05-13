@@ -7,9 +7,9 @@
 \usepackage[most]{tcolorbox}
 % --------------------- FONTS & LANGUAGE ---------------------
 \usepackage{amssymb,amsmath,amsthm,amsfonts}
-%\usepackage{mathspec}
-\usepackage[MnSymbol]{mathspec}
-%\defaultfontfeatures{Mapping=tex-text}
+\usepackage{siunitx}
+\usepackage{unicode-math}
+\setmathfont{xits-math.otf}
 \defaultfontfeatures{Scale=MatchLowercase,Numbers={Lining,Proportional}}
 
 \setmainfont{MinionPro}[
@@ -28,8 +28,6 @@
     BoldFont = *-SemiBold,
     BoldItalicFont = *-SemiBoldItalic
 ]
-\setmathfont{xits-math.otf}
-\setmathsfont[Set=Greek,Uppercase=Italic,Lowercase=Italic]{Minion Pro}
 \setmonofont{inconsolatalgc}[
     Path = fonts/,
     Extension = .ttf,
@@ -106,7 +104,7 @@ depth .25\baselineskip height #1\baselineskip\relax}
 % Provides LaTeX the ability to create hyperlinks within the document.
 % https://www.ctan.org/pkg/hyperref
 % http://en.wikibooks.org/wiki/LaTeX/Hyperlinks#Hyperref
-\usepackage{hyperref}
+\usepackage[pdfencoding=unicode,psdextra]{hyperref}
 \hypersetup{
     colorlinks,
     linkcolor={blue!50!black},
