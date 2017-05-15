@@ -1,0 +1,38 @@
+{
+\tikzstyle{block} = [draw, rectangle, minimum height=3em]
+\tikzstyle{sum} = [draw, fill=blue!20, circle, node distance=1cm]
+\tikzstyle{input} = [coordinate]
+\tikzstyle{output} = [coordinate]
+\tikzstyle{pinstyle} = [pin edge={to-,thin,black}]
+
+% 12cm calculated with inkscape.
+\begin{tikzpicture}[auto, scale=\linewidth/12cm, transform shape, node distance=2cm,>=latex']
+    % We start by placing the blocks
+    \node [input, name=input] {};
+    \node [block, right of=input] (k_r) {$k_r$};
+    \node [sum, right of=k_r] (sum) {$+$};
+    \node [block, right of=sum, node distance=3.5cm] (controller1) {$\kone$};
+    \node [block, right of=controller1, node distance=2.5cm] (controller2) {$\ktwo$};
+    \node [block, right of=controller2, node distance=1cm] (controller3) {$\kthree$};
+    \draw [->] (controller1) -- node[name=Omega] {$\Omega$} (controller2);
+    \node [output, right of=controller3] (output) {};
+    \node [block, below of=controller1] (k_tacho) {$-k_T$};
+    \node [block, left of=k_tacho, node distance=2.2cm] (k2) {$k_2$};
+    \node [block, below of=k2] (k1) {$k_1$};
+    \node [sum] (sumbelow) at (k2 -| sum) {$+$};
+
+    % Once the nodes are placed, connecting them is easy.
+    \draw [draw,->] (input) -- node {$r$} (k_r);
+    \draw [draw,->] (k_r) -- node {$+$} (sum);
+    \draw [->] (sum) -- node {$e$} (controller1);
+    \draw [->] (controller2) -- node {} (controller3);
+    \draw [->] (controller3) -- node [name=theta] {$x_1 = \theta$}(output);
+    \draw [->] (Omega) |- (k_tacho);
+    \draw [->] (k_tacho) -- node[label={[below]$x_2$}, label={$v_{tacho}$}] {} (k2);
+    \draw [->] (theta) |- (k1);
+    % Second sum node.
+    \draw [->] (k1) -| node[pos=0.9] {$+$} node [near end] {} (sumbelow);
+    \draw [->] (k2) -- node[pos=0.9] {$+$} node [near end] {} (sumbelow);
+    \draw [->] (sumbelow) -- node[pos=0.9] {$-$} node [near end] {} (sum);
+\end{tikzpicture}
+}
