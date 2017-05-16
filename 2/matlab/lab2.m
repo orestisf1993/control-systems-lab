@@ -1,4 +1,6 @@
 function lab2(a, z, t_s)
+global x;
+global idx;
 
 Vref_arduino = 5;
 V_7805 = 5.5;
@@ -22,14 +24,18 @@ k_r = k_1;
 fprintf('Starting controller with k_1 = %g, k_2 = %g, k_r = %g\n', ...
     k_1, k_2, k_r);
 
-count = 0;
+idx_max = 5000;
+x = zeros(idx_max, 2);
+finishup = onCleanup(@() stop_control(info));
+idx = 0;
 tic;
 while true %TODO
 
     [x_1, x_2] = read_state(a, Vref_arduino, V_7805);
+    x(idx+1,:) = [x_1, x_2];
     u = -k_1 * x_1 + -k_2 * x_2 + k_r * th_ref;
 
-    if mod(count, 100) == 0
+    if mod(idx, 100) == 0
         toc
         fprintf('%g %g\n', x_1, x_2);
         fprintf('k_1 * %g + k_2 * %g + k_r * %g = %g\n', x_1, x_2, th_ref, u);
@@ -45,10 +51,17 @@ while true %TODO
         feed = min(round(-u/2*255/Vref_arduino), 255);
         analogWrite(a, 6, feed)
     end
-
-    count = count + 1;
+end
 end
 
-%TODO: stop on ctrl+c ?
+function stop_control(a)
+global x;
+global idx;
+x = x(1:idx,:);
 
+fprintf('Stopping control\n');
+stop_motor(a);
+filename = [datestr(now, 'yyyy-mm-dd_HHMMSS'), '.mat'];
+fprintf('Saving results in %s\n', filename);
+save(filename, 'x');
 end
