@@ -24,24 +24,22 @@ k_r = k_1;
 fprintf('Starting controller with k_1 = %g, k_2 = %g, k_r = %g\n', ...
     k_1, k_2, k_r);
 
-idx_max = 5000;
-x = zeros(idx_max, 2);
-finishup = onCleanup(@() stop_control(info));
-idx = 0;
+%TODO: decide max size.
+max_size = 1000; % Arbitary max index.
+x = zeros(max_size, 3);
+finishup = onCleanup(@() stop_control(a));
 tic;
-while true %TODO
-
+for idx = 1:max_size
     [x_1, x_2] = read_state(a, Vref_arduino, V_7805);
-    x(idx+1,:) = [x_1, x_2];
-    u = -k_1 * x_1 + -k_2 * x_2 + k_r * th_ref;
+    x(idx,:) = [toc, x_1, x_2];
+    u = k_1 * x_1 + k_2 * x_2 - k_r * th_ref;
 
-    if mod(idx, 100) == 0
+    if mod(idx-1, 100) == 0
         toc
         fprintf('%g %g\n', x_1, x_2);
         fprintf('k_1 * %g + k_2 * %g + k_r * %g = %g\n', x_1, x_2, th_ref, u);
     end
 
-    u = -u; % AYTO!!!
     if u > 0
         analogWrite(a, 6, 0)
         feed = min(round(u/2*255/Vref_arduino), 255);
