@@ -1,12 +1,13 @@
-function lab2(a, z, t_s)
+function lab2(a, z, t_s, th_ref)
 global x;
 global idx;
 
 Vref_arduino = 5;
 V_7805 = 5.5;
 
-th_ref = 5;
-
+if ~exist('th_ref', 'var')
+    th_ref = @(~) 5;
+end
 omega_n = 4 / z / t_s;
 
 T_m = 0.641;
@@ -31,13 +32,16 @@ finishup = onCleanup(@() stop_control(a));
 tic;
 for idx = 1:max_size
     [x_1, x_2] = read_state(a, Vref_arduino, V_7805);
-    x(idx,:) = [toc, x_1, x_2];
-    u = k_1 * x_1 + k_2 * x_2 - k_r * th_ref;
+    t = toc;
+    th_ref_t = th_ref(t);
+    x(idx,:) = [t, x_1, x_2];
+    u = k_1 * x_1 + k_2 * x_2 - k_r * th_ref_t;
 
     if mod(idx-1, 100) == 0
         toc
         fprintf('%g %g\n', x_1, x_2);
-        fprintf('k_1 * %g + k_2 * %g + k_r * %g = %g\n', x_1, x_2, th_ref, u);
+        fprintf('k_1 * %g + k_2 * %g + k_r * %g = %g\n', x_1, x_2, ...
+            th_ref_t, u);
     end
 
     if u > 0
