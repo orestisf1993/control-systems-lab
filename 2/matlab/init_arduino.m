@@ -4,8 +4,8 @@ n_ports = length(port);
 if n_ports > 0
     port = port{1};
     if n_ports > 1
-        warning(['More than one serial ports found but will initialize' ...
-            ' only %s'], port);
+        warning(['More than one serial ports found but will ', ...
+            'initialize only %s'], port);
     end
 else
     port = 'DEMO';
