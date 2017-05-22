@@ -18,14 +18,15 @@ fprintf('Starting controller with k_1 = %g, k_2 = %g, k_r = %g\n', k_1, k_2, k_r
 %TODO: decide max size.
 max_size = 1000; % Arbitary max size.
 x = zeros(max_size, 3);
-finishup = onCleanup(@() stop_control(a));
+finishup = onCleanup(@() control_cleanup(a));
 tic;
 for idx = 1:max_size
     [x_1, x_2] = read_state(a, params.Vref_arduino, params.V_7805);
     t = toc;
     th_ref_t = th_ref(t);
     x(idx,:) = [t, x_1, x_2];
-    u = k_1 * x_1 + k_2 * x_2 - k_r * th_ref_t;
+    %TODO: just reverse if?
+    u = -k_1 * x_1 - k_2 * x_2 + k_r * th_ref_t; % TODO: +- k_r?
 
     if mod(idx-1, 100) == 0
         toc
@@ -33,26 +34,6 @@ for idx = 1:max_size
         fprintf('k_1 * %g + k_2 * %g + k_r * %g = %g\n', x_1, x_2, th_ref_t, u);
     end
 
-    if u > 0
-        analogWrite(a, 6, 0)
-        feed = min(round(u/2*255/params.Vref_arduino), 255);
-        analogWrite(a, 9, feed)
-    else
-        analogWrite(a, 9, 0)
-        feed = min(round(-u/2*255/params.Vref_arduino), 255);
-        analogWrite(a, 6, feed)
-    end
+    set_state(a, u, params.Vref_arduino);
 end
-end
-
-function stop_control(a)
-global x;
-global idx;
-x = x(1:idx,:);
-
-fprintf('Stopping control\n');
-stop_motor(a);
-filename = [datestr(now, 'yyyy-mm-dd_HHMMSS'), '.mat'];
-fprintf('Saving results in %s\n', filename);
-save(filename, 'x');
 end
