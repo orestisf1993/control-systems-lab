@@ -1,5 +1,9 @@
-function plot_results(filename)
+function plot_results(th_ref, filename)
 %PLOT_RESULTS Create plots with the data contained in a .mat file.
+
+if ~exist('th_ref', 'var')
+    th_ref = @(x) 5 * ones(size(x));
+end
 
 if ~exist('filename', 'var')
     filename = dir('*.mat');
@@ -12,6 +16,7 @@ x = load(filename);
 x = x.x;
 fprintf('Got x of size %s\n', sprintf('%g ', size(x)));
 f = new_figure(1, 2.2);
+plot(x(:, 1), th_ref(x(:, 2)));
 plot(x(:, 1), x(:, 2));
 savePlot(strcat(filename, '-x_1'), f);
 
