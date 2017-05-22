@@ -5,7 +5,7 @@ if ~exist('z', 'var')
     z = 1.1;
 end
 if ~exist('t_s', 'var')
-    t_s = 2;
+    t_s = 1;
 end
 
 lab2(a, z, t_s);
