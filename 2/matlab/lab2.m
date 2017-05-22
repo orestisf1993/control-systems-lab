@@ -6,17 +6,14 @@ if ~exist('th_ref', 'var')
     th_ref = @(~) 5;
 end
 omega_n = 4 / z / t_s;
-
-params = config();
-
 a_2 = omega_n^2;
 a_1 = 2 * z * omega_n;
 
+params = config();
 k_1 = -a_2 * params.T_m / (params.k_0 * params.k_mu * params.k_m);
 k_2 = (a_1 * params.T_m - 1) / (params.k_T * params.k_m);
 k_r = k_1;
-fprintf('Starting controller with k_1 = %g, k_2 = %g, k_r = %g\n', ...
-    k_1, k_2, k_r);
+fprintf('Starting controller with k_1 = %g, k_2 = %g, k_r = %g\n', k_1, k_2, k_r);
 
 %TODO: decide max size.
 max_size = 1000; % Arbitary max size.
@@ -33,8 +30,7 @@ for idx = 1:max_size
     if mod(idx-1, 100) == 0
         toc
         fprintf('%g %g\n', x_1, x_2);
-        fprintf('k_1 * %g + k_2 * %g + k_r * %g = %g\n', x_1, x_2, ...
-            th_ref_t, u);
+        fprintf('k_1 * %g + k_2 * %g + k_r * %g = %g\n', x_1, x_2, th_ref_t, u);
     end
 
     if u > 0
