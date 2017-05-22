@@ -246,3 +246,6 @@ session
 
 *.zip
 ArduinoIO/
+
+lab*.pdf
+*.mat*
