@@ -2,8 +2,10 @@ function lab2(a, z, t_s, th_ref)
 global x;
 global idx;
 
+multiplier = 1;
 if ~exist('th_ref', 'var')
     th_ref = @(~) 5;
+    multiplier = 3;
 end
 omega_n = 4 / z / t_s;
 a_2 = omega_n^2;
@@ -34,6 +36,6 @@ for idx = 1:max_size
         fprintf('k_1 * %g + k_2 * %g + k_r * %g = %g\n', x_1, x_2, th_ref_t, u);
     end
 
-    set_state(a, u, params.Vref_arduino);
+    set_state(a, multiplier * u, params.Vref_arduino);
 end
 end
