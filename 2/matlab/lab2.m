@@ -1,7 +1,10 @@
-function lab2(a, z, t_s, th_ref)
+function lab2(a, z, t_s, th_ref, save)
 global x;
 global idx;
 
+if ~exist('save', 'var')
+    save = true;
+end
 multiplier = 1;
 if ~exist('th_ref', 'var')
     th_ref = @(~) 5;
@@ -17,18 +20,16 @@ k_2 = (a_1 * params.T_m - 1) / (params.k_T * params.k_m);
 k_r = k_1;
 fprintf('Starting controller with k_1 = %g, k_2 = %g, k_r = %g\n', k_1, k_2, k_r);
 
-%TODO: decide max size.
-max_size = 1000; % Arbitary max size.
-x = zeros(max_size, 3);
-finishup = onCleanup(@() control_cleanup(a));
+max_size = fix(t_s * 500); % Arbitary max size.
+x = zeros(max_size, 4);
+finishup = onCleanup(@() control_cleanup(a, save));
 tic;
 for idx = 1:max_size
     [x_1, x_2] = read_state(a, params.Vref_arduino, params.V_7805);
     t = toc;
     th_ref_t = th_ref(t);
-    x(idx,:) = [t, x_1, x_2];
-    %TODO: just reverse if?
-    u = -k_1 * x_1 - k_2 * x_2 + k_r * th_ref_t; % TODO: +- k_r?
+    u = -k_1 * x_1 - k_2 * x_2 + k_r * th_ref_t;
+    x(idx,:) = [t, x_1, x_2, u];
 
     if mod(idx-1, 100) == 0
         toc
