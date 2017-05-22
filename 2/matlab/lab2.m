@@ -1,10 +1,5 @@
-function lab2(a, z, t_s, th_ref, save)
-global x;
-global idx;
+function lab2(a, z, t_s, th_ref, save_mat) %#ok<INUSD>
 
-if ~exist('save', 'var')
-    save = true;
-end
 multiplier = 1;
 if ~exist('th_ref', 'var')
     th_ref = @(~) 5;
@@ -22,7 +17,7 @@ fprintf('Starting controller with k_1 = %g, k_2 = %g, k_r = %g\n', k_1, k_2, k_r
 
 max_size = fix(t_s * 500); % Arbitary max size.
 x = zeros(max_size, 4);
-finishup = onCleanup(@() control_cleanup(a, save));
+finishup = onCleanup(@() stop_motor(a));
 tic;
 for idx = 1:max_size
     [x_1, x_2] = read_state(a, params.Vref_arduino, params.V_7805);
@@ -39,4 +34,5 @@ for idx = 1:max_size
 
     set_state(a, multiplier * u, params.Vref_arduino);
 end
+save_results
 end

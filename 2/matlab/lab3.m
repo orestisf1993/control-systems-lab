@@ -1,10 +1,4 @@
-function lab3(a, z, t_s, save) %TODO: rename
-global x; %TODO:remove, call when finished
-global idx;
-
-if ~exist('save', 'var')
-    save= true;
-end
+function lab3(a, z, t_s, save_mat) %#ok<INUSD>
 
 params = config();
 omega_n = 4 / z / t_s;
@@ -17,7 +11,7 @@ fprintf('Starting controller with k_1 = %g, k_2 = %g, k_i = %g\n', k_1, k_2, k_i
 
 max_size = fix(t_s * 550); % Arbitary max size.
 x = zeros(max_size, 5);
-finishup = onCleanup(@() control_cleanup(a, save));
+finishup = onCleanup(@() stop_motor(a));
 last = 0;
 %z = 0; %TODO
 [z, ~] = read_state(a, params.Vref_arduino, params.V_7805);
@@ -43,6 +37,7 @@ for idx = 1:max_size
     set_state(a, u, params.Vref_arduino);%TODO: u? kai sto lab2 5*u edw u h 5*u
     last = t;
 end
+save_results
 end
 
 function [a_1, a_2, a_3] = my_roots(z, omega) %TODO:rename
