@@ -21,6 +21,7 @@
 # *.ps
 # *.eps
 # *.pdf
+*.xdv
 fonts/
 report*.pdf
 
@@ -249,3 +250,5 @@ ArduinoIO/
 
 lab*.pdf
 *.mat*
+bkp/
+auto/

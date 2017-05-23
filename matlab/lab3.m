@@ -9,11 +9,10 @@ k_2 = (a_1 * params.T_m - 1) / (params.k_T * params.k_m);
 k_i = -a_3 * params.T_m / (params.k_0 * params.k_mu * params.k_m);
 fprintf('Starting controller with k_1 = %g, k_2 = %g, k_i = %g\n', k_1, k_2, k_i);
 
-max_size = fix(t_s * 550); % Arbitary max size.
+max_size = fix(t_s*550); % Arbitary max size multiplier.
 x = zeros(max_size, 5);
 finishup = onCleanup(@() stop_motor(a));
 last = 0;
-%z = 0; %TODO
 [z, ~] = read_state(a, params.Vref_arduino, params.V_7805);
 z = -z;
 tic;
@@ -34,7 +33,7 @@ for idx = 1:max_size
         fprintf('%g %g %g\n', x_1, x_2, z);
     end
 
-    set_state(a, u, params.Vref_arduino);%TODO: u? kai sto lab2 5*u edw u h 5*u
+    set_state(a, u, params.Vref_arduino); %TODO: u? kai sto lab2 5*u edw u h 5*u
     last = t;
 end
 save_results
