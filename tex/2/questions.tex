@@ -83,8 +83,140 @@ SettlingTime: 5.0980
 και το διάγραμμα θέσης φαίνεται στο σχήμα~\ref{fig:21-05}.
 
 \section{Σφάλμα στη μόνιμη κατάσταση}
+\begin{figure}
+  \centering
+  \begin{subfigure}[t]{\linewidth}
+    \includegraphics[width=\linewidth, keepaspectratio]{lab2/22-x_1}
+    \caption{θέση}
+    \label{fig:22-x_1}
+  \end{subfigure}\\
+  \begin{subfigure}[t]{0.45\linewidth}
+    \includegraphics[width=\linewidth, keepaspectratio]{lab2/22-x_2}
+    \caption{Ταχύτητα}
+    \label{fig:22-x_2}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.45\linewidth}
+    \includegraphics[width=\linewidth, keepaspectratio]{lab2/22-u}
+    \caption{Είσοδος ελέγχου}
+    \label{fig:22-u}
+  \end{subfigure}
+  \caption[Γραμμική ανάδραση με σταθερή τάση αναφοράς]{Γραμμική ανάδραση για $\theta_{ref} = \SI{5}{\volt}$}
+  \label{fig:22}
+\end{figure}
+
+Όπως φαίνεται και στη εικόνα~\ref{fig:21} παρατηρείται η ύπαρξη σφάλματος μόνιμης κατάστασης.
+Η μέση τιμή αυτού του σφάλματος είναι ίση με $\SI{0.062}{\volt}$
+
+Η διαφορά αυτή οφείλεται στο dead zone του κινητήρα και στα σφάλματα από τις μετρήσεις.
+Αν θέλουμε θέση να περάσει τη τιμή των $\SI{5}{\volt}$ μπορούμε να πολλαπλασιάσουμε τη τιμή του ελέγχου με έναν σταθερό συντελεστή.
+Αυτό, έχει ως αποτέλεσμα ο κινητήρας να κινείται και για μικρότερες τιμές του $u$.
+Το αποτέλεσμα φαίνεται στο σχήμα~\ref{fig:22}.
+
+Από \texttt{stepinfo}:
+\begin{code}
+\begin{minted}{text}
+    RiseTime: 0.8144
+SettlingTime: 10.1943
+  SettlingMin: 4.7067
+  SettlingMax: 5.1173
+    Overshoot: 2.3460
+  Undershoot: 0
+        Peak: 5.1173
+    PeakTime: 1.5093
+\end{minted}
+\end{code}
+Όπως είναι λογικό, η αλλαγή αυτή εμφανίζει υπερύψωση στο σύστημα κλειστού βρόχου.
+Μια πιο σωστή λύση θα αποτελούσε η δυναμική ανάδραση καταστάσεων που θα υλοποιηθεί στο επόμενο εργαστήριο.
+
 \section{Έλεγχος με ύπαρξη μαγνητικού φρένου}
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=\linewidth]{lab2/23-x_1}%TODO:ξανά;
+  \caption{Γραμμική ανάδραση με ύπαρξη μαγνητικού φρένου}
+  \label{fig:23}
+\end{figure}
+
+Τα αποτελέσματα του πειράματος φαίνονται στην εικόνα~\ref{fig:23}.
+Παρατηρείται αύξηση του σφάλματος μόνιμης κατάστασης σε $\SI{0.5}{\volt}$.
+Φυσικά, αν πολλαπλασιάζαμε και πάλι την είσοδο ελέγχου με σταθερό συντελεστή το σφάλμα θα ήταν μικρότερο.
+
 \section[Μεταβαλλόμενη τάση αναφοράς]{Μεταβαλλόμενη τάση αναφοράς $\theta_{ref} = 5 + 2 \sin{\left(\omega t\right)}$}
+\subsection[Δοκιμή με συχνότητα συστήματος]{Δοκιμή με συχνότητα συστήματος $\omega = \SI{246}{\radian / \second}$}
+\begin{figure}[htbp]
+  \centering
+  \begin{subfigure}[t]{\linewidth}
+    \includegraphics[width=\linewidth, keepaspectratio]{lab2/24-1-x_1}
+    \caption{θέση}
+    \label{fig:24-1-x_1}
+  \end{subfigure}\\
+  \begin{subfigure}[t]{0.45\linewidth}
+    \includegraphics[width=\linewidth, keepaspectratio]{lab2/24-1-x_2}
+    \caption{Ταχύτητα}
+    \label{fig:24-1-x_2}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.45\linewidth}
+    \includegraphics[width=\linewidth, keepaspectratio]{lab2/24-1-u}
+    \caption{Είσοδος ελέγχου}
+    \label{fig:24-1-u}
+  \end{subfigure}
+  \caption[Γραμμική ανάδραση με ημίτονο υψηλής συχνότητας]{Γραμμική ανάδραση με ημίτονο υψηλής συχνότητας $\omega = \SI{246}{\radian / \second}$}
+  \label{fig:24-1}
+\end{figure}
+Όπως είναι επόμενο ο κινητήρας δεν μπορεί να ακολουθήσει ένα ημίτονο με τόσο μεγάλη συχνότητα.
+Πιθανών ο ελεγκτής δεν είναι αρκετά γρήγορος ώστε να δειγματοληπτηθεί σωστά το ημίτονο σύμφωνα με το θεώρημα του
+Nyquist.
+Η επιλογή τέτοιας συχνότητας ήταν εξαρχής λανθασμένη.
+Τα σχετικά διαγράμματα φαίνονται στο σχήμα~\ref{fig:24-1}.
+
+\subsection[Δοκιμή με μεσαία συχνότητα]{Δοκιμή με μεσαία συχνότητα $\omega = \SI{10}{\radian / \second}$}
+\begin{figure}[htbp]
+  \centering
+  \begin{subfigure}[t]{\linewidth}
+    \includegraphics[width=\linewidth, keepaspectratio]{lab2/24-2-x_1}
+    \caption{θέση}
+    \label{fig:24-2-x_1}
+  \end{subfigure}\\
+  \begin{subfigure}[t]{0.45\linewidth}
+    \includegraphics[width=\linewidth, keepaspectratio]{lab2/24-2-x_2}
+    \caption{Ταχύτητα}
+    \label{fig:24-2-x_2}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.45\linewidth}
+    \includegraphics[width=\linewidth, keepaspectratio]{lab2/24-2-u}
+    \caption{Είσοδος ελέγχου}
+    \label{fig:24-2-u}
+  \end{subfigure}
+  \caption[Γραμμική ανάδραση με ημίτονο μεσαίας συχνότητας]{Γραμμική ανάδραση με ημίτονο υψηλής συχνότητας $\omega = \SI{10}{\radian / \second}$}
+  \label{fig:24-2}
+\end{figure}
+Εδώ, ο ελεγκτής είναι αρκετά γρήγορος ώστε να δειγματοληπτήσει το ημίτονο και η τάση ελέγχου που παράγεται φαίνεται να
+είναι σωστή αλλά ο κινητήρας και πάλι δεν είναι αρκετά γρήγορος ώστε να ακολουθήσει το ημίτονο.
+Τα διαγράμματα του πειράματος φαίνονται στο σχήμα~\ref{fig:24-2}.
+
+\subsection[Δοκιμή με χαμηλή συχνότητα]{Δοκιμή με χαμηλή συχνότητα $\omega = \SI{3}{\radian / \second}$}
+\begin{figure}[htbp]
+  \centering
+  \begin{subfigure}[t]{\linewidth}
+    \includegraphics[width=\linewidth, keepaspectratio]{lab2/24-3-x_1}
+    \caption{θέση}
+    \label{fig:24-3-x_1}
+  \end{subfigure}\\
+  \begin{subfigure}[t]{0.45\linewidth}
+    \includegraphics[width=\linewidth, keepaspectratio]{lab2/24-3-x_2}
+    \caption{Ταχύτητα}
+    \label{fig:24-3-x_2}
+  \end{subfigure}\hfill
+  \begin{subfigure}[t]{0.45\linewidth}
+    \includegraphics[width=\linewidth, keepaspectratio]{lab2/24-3-u}
+    \caption{Είσοδος ελέγχου}
+    \label{fig:24-3-u}
+  \end{subfigure}
+  \caption[Γραμμική ανάδραση με ημίτονο χαμηλής συχνότητας]{Γραμμική ανάδραση με ημίτονο χαμηλής συχνότητας $\omega = \SI{3}{\radian / \second}$}
+  \label{fig:24-3}
+\end{figure}
+Εδώ, ο κινητήρας ακολουθεί αρκετά καλά το ημίτονο. Φαίνεται να υπάρχει μια μετατόπιση του ημιτόνου. Επίσης, παρατηρούμε
+ότι η $\theta_{ref}$ τέμνει την $x_1$ στα τοπικά ακρότατά της σημεία.
+Τα διαγράμματα του πειράματος φαίνονται στο σχήμα~\ref{fig:24-3}.
 
 %%% Local Variables:
 %%% mode: latex
