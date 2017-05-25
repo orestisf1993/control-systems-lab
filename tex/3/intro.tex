@@ -1,12 +1,72 @@
 \section{Εισαγωγή}
+Σε αυτό το εργαστήριο καλούμαστε να πετύχουμε τη σύγκλιση της θέσης του κινητήρα στη θέση $\theta_{ref} = \SI{5}{\volt}$
+με την ύπαρξη (σταθερών) διαταραχών μέσω του μαγνητικού φρένου.
+
+Όπως και στη θεωρία, προσθέτουμε τον ολοκληρωτή:
+\[\dot{z} = y - r = C x - r = x_1 - \theta_{ref}\]
+και θα χρησιμοποιήσουμε ελεγκτή της μορφής:
+\[u = -k_1 x_1 - k_2 x_2 - k_i z\]
+\subsection{Ανάλυση Συστήματος}
 \newcommand{\kone}{\frac{-k_m}{T_m s + 1}}
 \newcommand{\ktwo}{k_{\mu}}
 \newcommand{\kthree}{\frac{k_0}{s}}
-\begin{figure}[htb]
+\begin{figure}[htbp]
     \centering
     \input{images/system-feedback-dynamic}
     \caption{Το σύστημα με δυναμική ανάδραση καταστάσεων}\label{fig:system-feedback-dynamic}
 \end{figure}
+Η ανάλυση του συστήματος θα βασιστεί στο δομικό διάγραμμα του σχήματος~\ref{fig:system-feedback-dynamic}.
+Όπως και στην ανάλυση του προηγούμενου εργαστηρίου προκύπτει η σχέση:
+\begin{equation}
+  \label{eq:x_2-1}
+  e k_m k_T = T_m s x_2 + x_2
+\end{equation}
+όπου $\dot{x}_2 = s x_2$ και
+\begin{equation}%TODO: d(t)??
+  \label{eq:e}
+  e = - k_i z - k_1 x_1 - k_2 x_2
+\end{equation}
+Από~\ref{eq:x_2-1} και~\ref{eq:e}:
+\begin{align*}
+  k_m k_T (-k_i z - k_1 x_1 -k_2 x_2) &= T_m \dot{x}_2 + x_2 \implies\\
+  \dot{x}_2 &= -\frac{k_1 k_m k_T}{T_m} x_1 -\frac{k_2 k_m k_T + 1}{T_m} x_2 - \frac{k_i k_m k_T}{T_m} z
+\end{align*}
+και, όπως και στο προηγούμενο εργαστήριο:
+\begin{equation}
+  \label{eq:x_1}
+  \dot{x}_1 = -\frac{k_{\mu} k_0}{k_T} x_2
+\end{equation}
+Οι πίνακες του συστήματος προκύπτουν:
+\begin{align}
+  A & = \begin{bmatrix}
+    0 & -\frac{k_{\mu} k_0}{k_T} & 0\\
+    -\frac{k_1 k_m k_T}{T_m} & \frac{1 + k_2 k_m k_T}{T_m} & -\frac{k_i k_m k_T}{T_m}\\
+    1 & 0 & 0
+  \end{bmatrix} \\
+  B & = \begin{bmatrix}
+    0\\
+    0\\
+    -1
+  \end{bmatrix}
+\end{align}
+και το χαρακτηριστικό πολυώνυμο:
+\begin{equation}
+  \label{eq:sI-A}
+  s^3 + \frac{k_2 k_T k_m + 1}{T_m} s^2 -\frac{k_0 k_1 k_m k_{\mu}}{T_m} s - \frac{k_0 k_i k_m k_{\mu}}{T_m}
+\end{equation}
+Για επιθυμητό πολυώνυμο $s^3 + a_1 s^2 + s_2 s + a_3$ προκύπτουν οι σχέσεις:
+\begin{align}
+  \label{eq:ks}
+  k_1 &= -\frac{a_2 T_m}{k_0 k_m k_{\mu}}\\
+  k_2 &= \frac{a_1 T_m - 1}{k_T k_m}\\
+  k_i &= -\frac{a_3 T_m}{k_o k_m k_{\mu}}
+\end{align}
+και για τους πόλους ισχύει:
+\begin{align}
+  a_1 &= p_1 + p_2 + p_3\\
+  a_2 &= p_1 p_2 + p_2 p_3 + p_1 p_3\\
+  a_3 &= p_1 p_2 p_3
+\end{align}
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../lab3"
