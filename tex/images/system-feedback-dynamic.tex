@@ -1,0 +1,53 @@
+{
+  \tikzstyle{block} = [draw, rectangle, minimum height=3em]
+  \tikzstyle{sum} = [draw, fill=blue!20, circle, node distance=1cm]
+  \tikzstyle{input} = [coordinate]
+  \tikzstyle{output} = [coordinate]
+  \tikzstyle{pinstyle} = [pin edge={to-, thin, black}]
+  \tikzset{line/.style={draw, -latex}}
+
+  % Width calculated with inkscape.
+  \begin{tikzpicture}[auto, scale=\linewidth/14.78cm, transform shape, node distance=2cm,>=latex']
+    % We start by placing the blocks
+    \node [input, name=input] {};
+    \node [sum, right of=input] (sum_r) {$+$};
+    \node [block, right of=sum_r, node distance=1cm] (integral) {$\int$};
+    \node [block, right of=integral] (k_i) {$k_i$};
+    \node [sum, right of=k_i, node distance=1.5cm] (sum) {$+$};
+    \node [block, right of=sum, node distance=3.5cm] (controller1) {$\kone$};
+    \node [block, right of=controller1, node distance=2.5cm] (controller2) {$\ktwo$};
+    \node [block, right of=controller2, node distance=1cm] (controller3) {$\kthree$};
+    \draw [line] (controller1) -- node[name=Omega] {$\Omega$} (controller2);
+    \node [output, right of=controller3] (output) {};
+    \node [block, below of=controller1] (k_tacho) {$-k_T$};
+    \node [block, left of=k_tacho, node distance=2.2cm] (k2) {$k_2$};
+    \node [block, below of=k2] (k1) {$k_1$};
+    \node [sum] (sumbelow) at (k2 -| sum) {$+$};
+
+    % Once the nodes are placed, connecting them is easy.
+    \draw [line] (input) node [left] {$r$} -- (sum_r.west) node [above, xshift=-0.1cm] {$-$};
+    \draw [line] (sum_r) -- (integral);
+    \draw [line] (integral) -- node {$z\left( t \right)$} (k_i);
+    \draw [line] (k_i) -- (sum.west) node [above, xshift=-0.1cm] {$-$};
+    \draw [line] (sum) -- node {$e$} (controller1);
+    \draw [line] (controller2) -- node {} (controller3);
+    \draw [line] (controller3) -- node [name=theta] {$x_1 = \theta$}(output);
+    \draw [line] (Omega) |- (k_tacho);
+    \draw [line] (k_tacho) -- node[label={[below]$x_2$}, label={$v_{tacho}$}] {} (k2);
+    \draw [line] (theta) |- (k1);
+    % Path from theta output to first sum with r.
+    \path [line] (theta.south) --
+    ([yshift=-5.5cm]theta.south) --
+    ([yshift=-5.5cm]sum_r.center) --
+    (sum_r.south) node [left, yshift=-0.1cm] {$+$};
+    % Second sum node.
+    \draw [line] (k1) -| (sumbelow.south) node [left, yshift=-0.1cm] {$+$};
+    \draw [line] (k2) -- (sumbelow.east) node [above, xshift=0.1cm] {$+$};
+    \draw [line] (sumbelow.north) -- (sum.south) node [left, yshift=-0.1cm] {$-$};
+  \end{tikzpicture}
+}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../lab3"
+%%% End:
